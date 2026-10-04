@@ -36,7 +36,7 @@ const DemonstracaoConfirmacao = () => {
               </div>
               <h3 className="text-lg font-semibold mb-2">Obrigado pelo seu interesse!</h3>
               <p className="text-muted-foreground text-sm">
-                Recebemos sua solicitação de demonstração do AMVIX e estamos ansiosos para mostrar como nossa plataforma pode transformar sua gestão empresarial.
+                Recebemos sua solicitação de demonstração do AMVIX e estamos ansiosos para mostrar como o AMVIX pode organizar a gestão fiscal da sua carteira de clientes.
               </p>
             </CardContent>
           </Card>

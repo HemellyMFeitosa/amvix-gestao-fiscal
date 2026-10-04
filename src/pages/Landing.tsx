@@ -8,7 +8,7 @@ import {
   Shield,
   Users,
   FileText,
-  DollarSign,
+  Building2,
   AlertCircle,
   MessageCircle,
   Check,
@@ -37,13 +37,13 @@ const Landing = () => {
   const [showWhatsAppTooltip, setShowWhatsAppTooltip] = useState(false);
 
   // Dados mockados para o dashboard preview
-  const revenueData = [
-    { mes: "Jan", valor: 45000 },
-    { mes: "Fev", valor: 52000 },
-    { mes: "Mar", valor: 48000 },
-    { mes: "Abr", valor: 61000 },
-    { mes: "Mai", valor: 55000 },
-    { mes: "Jun", valor: 67000 },
+  const carteiraData = [
+    { mes: "Jan", valor: 62 },
+    { mes: "Fev", valor: 66 },
+    { mes: "Mar", valor: 71 },
+    { mes: "Abr", valor: 75 },
+    { mes: "Mai", valor: 82 },
+    { mes: "Jun", valor: 87 },
   ];
 
   const notasFiscaisData = [
@@ -77,7 +77,7 @@ const Landing = () => {
             onClick={() => navigate("/login")}
             className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10"
           >
-            Área do Cliente
+            Entrar
           </Button>
         </div>
       </header>
@@ -86,14 +86,15 @@ const Landing = () => {
       <section className="pt-32 pb-20 px-6">
         <div className="container mx-auto text-center max-w-5xl">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent animate-fade-in">
-            Sistema de Gestão Empresarial Inteligente
+            Gestão fiscal para escritórios contábeis
           </h1>
           <p className="text-xl md:text-2xl text-slate-300 mb-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            Centralize todas as demandas do seu negócio em um único lugar!
+            Toda a sua carteira de clientes em um único painel, com um portal de consulta para cada empresa.
           </p>
           <p className="text-base text-slate-400 mb-8 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            Não perca mais tempo com rotinas manuais e processos descentralizados. 
-            O AMVIX integra gestão fiscal, financeira e operacional em uma plataforma completa.
+            Chega de notas, XMLs e prazos espalhados entre planilhas, portais da SEFAZ e e-mails.
+            No AMVIX sua equipe acompanha notas fiscais, obrigações acessórias e certificados de todos
+            os CNPJs, e cada cliente consulta os próprios dados sem precisar ligar para o escritório.
           </p>
           <Button
             size="lg"
@@ -149,15 +150,15 @@ const Landing = () => {
                   <Card className="p-4 bg-gradient-to-br from-green-500/10 to-emerald-600/10 border-green-500/20">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-xs text-slate-400 mb-1">Receita Total</p>
-                        <h3 className="text-2xl font-bold text-green-400">R$ 328K</h3>
+                        <p className="text-xs text-slate-400 mb-1">Empresas na Carteira</p>
+                        <h3 className="text-2xl font-bold text-green-400">87</h3>
                         <p className="text-xs text-green-500 mt-1 flex items-center gap-1">
                           <TrendingUp className="w-3 h-3" />
                           +18%
                         </p>
                       </div>
                       <div className="bg-green-500/20 p-2 rounded-lg">
-                        <DollarSign className="w-5 h-5 text-green-400" />
+                        <Building2 className="w-5 h-5 text-green-400" />
                       </div>
                     </div>
                   </Card>
@@ -165,7 +166,7 @@ const Landing = () => {
                   <Card className="p-4 bg-gradient-to-br from-cyan-500/10 to-blue-600/10 border-cyan-500/20">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-xs text-slate-400 mb-1">Taxa de Sucesso</p>
+                        <p className="text-xs text-slate-400 mb-1">Notas Validadas</p>
                         <h3 className="text-2xl font-bold text-cyan-400">98.5%</h3>
                         <p className="text-xs text-green-500 mt-1 flex items-center gap-1">
                           <TrendingUp className="w-3 h-3" />
@@ -181,7 +182,7 @@ const Landing = () => {
                   <Card className="p-4 bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-500/20">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-xs text-slate-400 mb-1">Alertas Ativos</p>
+                        <p className="text-xs text-slate-400 mb-1">Prazos Próximos</p>
                         <h3 className="text-2xl font-bold text-red-400">15</h3>
                         <p className="text-xs text-slate-400 mt-1 flex items-center gap-1">
                           <AlertCircle className="w-3 h-3" />
@@ -200,10 +201,10 @@ const Landing = () => {
                   <Card className="p-4 bg-slate-800/50 border-slate-700">
                     <h3 className="text-sm font-bold mb-3 flex items-center gap-2">
                       <BarChart3 className="w-4 h-4 text-cyan-400" />
-                      Receita Mensal
+                      Clientes Ativos na Carteira
                     </h3>
                     <ResponsiveContainer width="100%" height={150}>
-                      <LineChart data={revenueData}>
+                      <LineChart data={carteiraData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                         <XAxis dataKey="mes" stroke="#94a3b8" style={{ fontSize: '10px' }} />
                         <YAxis stroke="#94a3b8" style={{ fontSize: '10px' }} />
@@ -263,7 +264,7 @@ const Landing = () => {
                   </div>
                   <div>
                     <p className="font-bold text-sm">Completo</p>
-                    <p className="text-xs text-slate-600">Dashboard integrado</p>
+                    <p className="text-xs text-slate-600">Painel multiempresa</p>
                   </div>
                 </div>
               </Card>
@@ -275,7 +276,7 @@ const Landing = () => {
                   </div>
                   <div>
                     <p className="font-bold text-sm">Seguro</p>
-                    <p className="text-xs text-slate-600">Dados protegidos</p>
+                    <p className="text-xs text-slate-600">Dados isolados por CNPJ</p>
                   </div>
                 </div>
               </Card>
@@ -287,7 +288,7 @@ const Landing = () => {
                   </div>
                   <div>
                     <p className="font-bold text-sm">Eficiente</p>
-                    <p className="text-xs text-slate-600">Análises em tempo real</p>
+                    <p className="text-xs text-slate-600">Portal do cliente</p>
                   </div>
                 </div>
               </Card>
@@ -308,9 +309,9 @@ const Landing = () => {
               <div className="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6">
                 <BarChart3 className="w-8 h-8 text-cyan-400" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-white">Análises Avançadas</h3>
+              <h3 className="text-xl font-bold mb-3 text-white">Toda a Carteira em um Painel</h3>
               <p className="text-slate-400">
-                Relatórios e dashboards inteligentes para tomada de decisão estratégica com dados em tempo real.
+                Alterne entre os CNPJs dos seus clientes e filiais e acompanhe notas, obrigações e certificados sem trocar de sistema.
               </p>
             </Card>
 
@@ -318,9 +319,9 @@ const Landing = () => {
               <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6">
                 <Shield className="w-8 h-8 text-blue-400" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-white">Segurança Total</h3>
+              <h3 className="text-xl font-bold mb-3 text-white">Dados Isolados por Cliente</h3>
               <p className="text-slate-400">
-                Dados isolados por empresa com Row Level Security no PostgreSQL, autenticação via Supabase e permissões por perfil.
+                Cada empresa só enxerga o que é dela: isolamento no banco de dados, autenticação segura e recursos de apoio à LGPD.
               </p>
             </Card>
 
@@ -328,9 +329,9 @@ const Landing = () => {
               <div className="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6">
                 <Users className="w-8 h-8 text-cyan-400" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-white">Gestão de Equipes</h3>
+              <h3 className="text-xl font-bold mb-3 text-white">Sócios, Equipe e Clientes</h3>
               <p className="text-slate-400">
-                Controle completo de usuários, permissões e acessos para sua equipe com níveis hierárquicos.
+                Perfis de acesso prontos: o sócio administra, a equipe opera e o cliente apenas consulta, com permissões por módulo e ação.
               </p>
             </Card>
           </div>

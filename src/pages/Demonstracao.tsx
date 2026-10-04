@@ -17,9 +17,9 @@ const Demonstracao = () => {
     email: "",
     telefone: "",
     empresa: "",
+    porteCarteira: "",
     captcha: "",
-    consentimento: false,
-    codigoPais: "+55"
+    consentimento: false
   });
 
   const [errors, setErrors] = useState({
@@ -27,6 +27,7 @@ const Demonstracao = () => {
     email: false,
     telefone: false,
     empresa: false,
+    porteCarteira: false,
     captcha: false,
     consentimento: false
   });
@@ -42,6 +43,7 @@ const Demonstracao = () => {
       email: !formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email),
       telefone: !formData.telefone.trim(),
       empresa: !formData.empresa.trim(),
+      porteCarteira: !formData.porteCarteira,
       captcha: formData.captcha !== "15",
       consentimento: !formData.consentimento
     };
@@ -76,12 +78,20 @@ const Demonstracao = () => {
   };
 
   const beneficios = [
-    "Emissão de NF-e, NFC-e e NFS-e",
-    "Gestão de clientes e produtos",
-    "Controle tributário automatizado",
-    "Relatórios em tempo real",
-    "Integração com SEFAZ",
-    "Suporte especializado"
+    "Painel multiempresa para toda a carteira",
+    "Portal de consulta para os seus clientes",
+    "Controle de NF-e, NFS-e e NFC-e por CNPJ",
+    "Acompanhamento de SPED Fiscal e EFD-Reinf",
+    "Gestão de certificados digitais",
+    "Perfis de acesso para sócios, equipe e clientes"
+  ];
+
+  const opcoesCarteira = [
+    { value: "propria", label: "Sou uma empresa (cuido só da minha)" },
+    { value: "1-20", label: "1 a 20 empresas" },
+    { value: "21-50", label: "21 a 50 empresas" },
+    { value: "51-200", label: "51 a 200 empresas" },
+    { value: "200+", label: "Mais de 200 empresas" }
   ];
 
   return (
@@ -96,10 +106,10 @@ const Demonstracao = () => {
         {/* Título Principal */}
         <div className="text-center mb-6">
           <h1 className="text-2xl md:text-3xl font-bold mb-3 bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent leading-tight">
-            Transforme sua gestão empresarial com o AMVIX
+            Veja o AMVIX na rotina do seu escritório
           </h1>
           <h2 className="text-lg md:text-xl text-primary font-medium mb-4">
-            Sistema completo de emissão de notas fiscais e controle tributário
+            Gestão fiscal de toda a sua carteira de clientes, com portal de consulta para cada empresa
           </h2>
         </div>
 
@@ -109,10 +119,10 @@ const Demonstracao = () => {
             <Cloud className="w-3 h-3" /> 100% Cloud
           </div>
           <div className="px-4 py-2 bg-muted/50 rounded-full text-xs text-muted-foreground flex items-center gap-2">
-            <Shield className="w-3 h-3" /> Totalmente Seguro
+            <Shield className="w-3 h-3" /> Dados isolados por cliente
           </div>
           <div className="px-4 py-2 bg-muted/50 rounded-full text-xs text-muted-foreground flex items-center gap-2">
-            <FileCheck className="w-3 h-3" /> Homologado SEFAZ
+            <FileCheck className="w-3 h-3" /> Multiempresa e filiais
           </div>
         </div>
 
@@ -133,8 +143,8 @@ const Demonstracao = () => {
 
         {/* Descrição */}
         <p className="text-center text-muted-foreground mb-6 text-sm">
-          Preencha os campos abaixo e nossa equipe entrará em contato para apresentar 
-          todas as funcionalidades do AMVIX em uma demonstração personalizada e gratuita.
+          Preencha os campos abaixo e nossa equipe entrará em contato para uma demonstração
+          gratuita, montada de acordo com o tamanho da sua carteira de clientes.
         </p>
 
         {/* Formulário */}
@@ -175,16 +185,9 @@ const Demonstracao = () => {
           <div>
             <Label htmlFor="telefone">Telefone *</Label>
             <div className="flex gap-2">
-              <select
-                value={formData.codigoPais}
-                onChange={(e) => handleInputChange("codigoPais", e.target.value)}
-                className="w-28 h-10 rounded-md border border-input bg-background px-3 text-sm"
-              >
-                <option value="+55">🇧🇷 +55</option>
-                <option value="+1">🇺🇸 +1</option>
-                <option value="+44">🇬🇧 +44</option>
-                <option value="+351">🇵🇹 +351</option>
-              </select>
+              <span className="w-16 h-10 rounded-md border border-input bg-muted/50 px-3 text-sm flex items-center justify-center text-muted-foreground">
+                +55
+              </span>
               <Input
                 id="telefone"
                 type="tel"
@@ -201,17 +204,36 @@ const Demonstracao = () => {
 
           {/* Empresa */}
           <div>
-            <Label htmlFor="empresa">Empresa *</Label>
+            <Label htmlFor="empresa">Escritório ou empresa *</Label>
             <Input
               id="empresa"
               type="text"
-              placeholder="Nome da sua empresa"
+              placeholder="Nome do seu escritório contábil"
               value={formData.empresa}
               onChange={(e) => handleInputChange("empresa", e.target.value)}
               className={errors.empresa ? "border-destructive" : ""}
             />
             {errors.empresa && (
-              <p className="text-destructive text-sm mt-1">Empresa é obrigatório</p>
+              <p className="text-destructive text-sm mt-1">Escritório ou empresa é obrigatório</p>
+            )}
+          </div>
+
+          {/* Porte da carteira */}
+          <div>
+            <Label htmlFor="porteCarteira">Quantas empresas você atende? *</Label>
+            <select
+              id="porteCarteira"
+              value={formData.porteCarteira}
+              onChange={(e) => handleInputChange("porteCarteira", e.target.value)}
+              className={`w-full h-10 rounded-md border bg-background px-3 text-sm ${errors.porteCarteira ? "border-destructive" : "border-input"}`}
+            >
+              <option value="" disabled>Selecione</option>
+              {opcoesCarteira.map((opcao) => (
+                <option key={opcao.value} value={opcao.value}>{opcao.label}</option>
+              ))}
+            </select>
+            {errors.porteCarteira && (
+              <p className="text-destructive text-sm mt-1">Selecione o tamanho da carteira</p>
             )}
           </div>
 
@@ -241,7 +263,7 @@ const Demonstracao = () => {
             />
             <Label htmlFor="consentimento" className="text-sm leading-relaxed cursor-pointer">
               Eu concordo em receber comunicações.{" "}
-              <Link to="/" className="text-primary hover:underline">
+              <Link to="/politica-privacidade" className="text-primary hover:underline">
                 Acesse nossa política para saber mais
               </Link>
             </Label>

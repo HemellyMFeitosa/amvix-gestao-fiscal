@@ -107,7 +107,7 @@ const Dashboard = () => {
                 Dashboard AMVIX
               </h1>
               <p className="text-lg text-muted-foreground mb-4">
-                Sistema de Gestão Empresarial Inteligente
+                Gestão fiscal da sua carteira de clientes
               </p>
               {empresaAtual && (
                 <div className="inline-flex items-center gap-2 bg-background/50 backdrop-blur-sm px-4 py-2 rounded-lg border border-primary/20">
