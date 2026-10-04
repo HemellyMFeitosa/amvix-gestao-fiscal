@@ -30,6 +30,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import amvixLogo from "@/assets/amvix-logo.png";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -69,7 +70,7 @@ const Landing = () => {
       <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-lg border-b border-slate-800">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/src/assets/amvix-logo.png" alt="AMVIX" className="h-8 w-auto" />
+            <img src={amvixLogo} alt="AMVIX" className="h-8 w-auto" />
           </div>
           <Button
             variant="outline"
@@ -319,7 +320,7 @@ const Landing = () => {
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">Segurança Total</h3>
               <p className="text-slate-400">
-                Proteção de dados com criptografia de ponta a ponta e backups automáticos diários.
+                Dados isolados por empresa com Row Level Security no PostgreSQL, autenticação via Supabase e permissões por perfil.
               </p>
             </Card>
 
@@ -340,10 +341,10 @@ const Landing = () => {
       <footer className="py-8 px-6 border-t border-slate-800 bg-slate-950">
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <img src="/src/assets/amvix-logo.png" alt="AMVIX" className="h-6 w-auto" />
+            <img src={amvixLogo} alt="AMVIX" className="h-6 w-auto" />
           </div>
           <p className="text-slate-400 text-sm">
-            Copyright © 2024 AMVIX. Todos os direitos reservados.
+            Copyright © {new Date().getFullYear()} AMVIX. Todos os direitos reservados.
           </p>
         </div>
       </footer>

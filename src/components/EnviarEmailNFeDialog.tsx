@@ -13,11 +13,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Mail, Loader2 } from "lucide-react";
+import { getErrorMessage } from "@/lib/errorMapper";
+import type { NotaFiscal } from "@/types/nfe";
 
 interface EnviarEmailNFeDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  nota: any;
+  nota: NotaFiscal | null;
   emailPadrao?: string;
 }
 
@@ -61,8 +63,8 @@ export const EnviarEmailNFeDialog = ({
       setEmail(emailPadrao || "");
       setIncluirXML(true);
       setIncluirPDF(true);
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao enviar e-mail");
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, "Erro ao enviar e-mail"));
     } finally {
       setEnviando(false);
     }

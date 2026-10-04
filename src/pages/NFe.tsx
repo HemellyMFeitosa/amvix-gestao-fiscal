@@ -32,15 +32,19 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNotasFiscaisStats, useNotasFiscaisList } from "@/hooks/useNotasFiscais";
 import { useEmpresa } from "@/contexts/EmpresaContext";
 import { downloadXMLNFe, gerarPDFNFe } from "@/lib/nfeUtils";
+import type { DadosFiscaisNFe } from "@/types/nfe";
+import { getErrorMessage } from "@/lib/errorMapper";
+
+type NotaLista = NonNullable<ReturnType<typeof useNotasFiscaisList>["data"]>[number];
 
 const NFe = () => {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [visualizarDialogOpen, setVisualizarDialogOpen] = useState(false);
   const [emailDialogOpen, setEmailDialogOpen] = useState(false);
-  const [notaSelecionada, setNotaSelecionada] = useState<any>(null);
+  const [notaSelecionada, setNotaSelecionada] = useState<NotaLista | null>(null);
   const [cancelarDialogOpen, setCancelarDialogOpen] = useState(false);
-  const [notaParaCancelar, setNotaParaCancelar] = useState<any>(null);
+  const [notaParaCancelar, setNotaParaCancelar] = useState<NotaLista | null>(null);
 
   const { empresaAtual, loading: loadingEmpresa } = useEmpresa();
   const empresaId = empresaAtual?.id;
@@ -57,12 +61,12 @@ const NFe = () => {
   // Só permite operações com empresa válida
   const temEmpresaValida = !!empresaId;
 
-  const handleVisualizar = (nota: any) => {
+  const handleVisualizar = (nota: NotaLista) => {
     setNotaSelecionada(nota);
     setVisualizarDialogOpen(true);
   };
 
-  const handleDownloadXML = (nota: any) => {
+  const handleDownloadXML = (nota: NotaLista) => {
     if (!empresaAtual) {
       toast.error("Empresa não selecionada");
       return;
@@ -71,13 +75,13 @@ const NFe = () => {
     try {
       downloadXMLNFe(nota, empresaAtual);
       toast.success(`Download XML da NF-e ${String(nota.numero).padStart(8, "0")} concluído`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao gerar XML:", error);
       toast.error("Erro ao gerar XML");
     }
   };
 
-  const handleDownloadPDF = (nota: any) => {
+  const handleDownloadPDF = (nota: NotaLista) => {
     if (!empresaAtual) {
       toast.error("Empresa não selecionada");
       return;
@@ -86,18 +90,18 @@ const NFe = () => {
     try {
       gerarPDFNFe(nota, empresaAtual);
       toast.success(`Download PDF da NF-e ${String(nota.numero).padStart(8, "0")} concluído`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao gerar PDF:", error);
       toast.error("Erro ao gerar PDF");
     }
   };
 
-  const handleEnviarEmail = (nota: any) => {
+  const handleEnviarEmail = (nota: NotaLista) => {
     setNotaSelecionada(nota);
     setEmailDialogOpen(true);
   };
 
-  const handleIniciarCancelamento = (nota: any) => {
+  const handleIniciarCancelamento = (nota: NotaLista) => {
     if (nota.status === "Cancelada") {
       toast.error("Esta nota já está cancelada");
       return;
@@ -122,8 +126,8 @@ const NFe = () => {
       queryClient.invalidateQueries({ queryKey: ["notas-fiscais-list"] });
       setCancelarDialogOpen(false);
       setNotaParaCancelar(null);
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao cancelar nota fiscal");
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, "Erro ao cancelar nota fiscal"));
     }
   };
 
@@ -325,7 +329,7 @@ const NFe = () => {
         onOpenChange={setEmailDialogOpen}
         nota={notaSelecionada}
         emailPadrao={
-          notaSelecionada?.dados_fiscais?.destinatario?.email ||
+          (notaSelecionada?.dados_fiscais as DadosFiscaisNFe | null)?.destinatario?.email ||
           notaSelecionada?.clientes_fornecedores?.email ||
           ""
         }

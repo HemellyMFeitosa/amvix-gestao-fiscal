@@ -24,6 +24,7 @@ import {
 import { Plus, Search, Pencil, Trash2, Package, Loader2 } from "lucide-react";
 import { useProdutos, Produto } from "@/hooks/useProdutos";
 import { ProdutoModal } from "@/components/cadastros/ProdutoModal";
+import type { ProdutoInput } from "@/hooks/useProdutos";
 
 const CadastroProdutos = () => {
   const { produtos, loading, criarProduto, atualizarProduto, excluirProduto } = useProdutos();
@@ -63,7 +64,7 @@ const CadastroProdutos = () => {
     setProdutoParaExcluir(null);
   };
 
-  const handleSave = async (produto: any) => {
+  const handleSave = async (produto: ProdutoInput) => {
     if (produtoSelecionado) {
       await atualizarProduto(produtoSelecionado.id, produto);
     } else {

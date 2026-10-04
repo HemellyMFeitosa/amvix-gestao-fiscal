@@ -1,56 +1,21 @@
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import { format } from "date-fns";
+import type { DadosFiscaisNFe, EmpresaNFe, ItemNFe, NotaFiscal as NotaFiscalBase } from "@/types/nfe";
 
 // Tipos para o autoTable
 declare module "jspdf" {
   interface jsPDF {
-    autoTable: (options: any) => jsPDF;
+    autoTable: (options: Record<string, unknown>) => jsPDF;
     lastAutoTable: { finalY: number };
   }
 }
 
-interface NotaFiscal {
-  id: string;
-  numero: number;
-  serie: number;
-  data_emissao: string;
-  natureza_operacao: string;
-  status: string;
-  valor_total: number;
-  dados_fiscais: any;
-  clientes_fornecedores?: {
-    nome_razao_social: string;
-    cpf_cnpj: string;
-    email?: string;
-    endereco?: string;
-    numero?: string;
-    bairro?: string;
-    cidade?: string;
-    uf?: string;
-    cep?: string;
-    telefone?: string;
-    ie?: string;
-  };
-}
-
-interface Empresa {
-  razao_social: string;
-  nome_fantasia: string;
-  cnpj: string;
-  inscricao_estadual?: string;
-  logradouro?: string;
-  numero?: string;
-  bairro?: string;
-  cidade?: string;
-  estado?: string;
-  cep?: string;
-  telefone?: string;
-  email?: string;
-}
+type NotaFiscal = NotaFiscalBase;
+type Empresa = EmpresaNFe;
 
 // Gerar chave de acesso simulada (44 dígitos)
-const gerarChaveAcesso = (nota: NotaFiscal, empresa: Empresa): string => {
+export const gerarChaveAcesso = (nota: NotaFiscal, empresa: Empresa): string => {
   const cUF = "13"; // AM
   const AAMM = format(new Date(nota.data_emissao), "yyMM");
   const cnpj = (empresa.cnpj || "").replace(/\D/g, "").padStart(14, "0");
@@ -76,13 +41,13 @@ const gerarChaveAcesso = (nota: NotaFiscal, empresa: Empresa): string => {
 };
 
 // Formatar chave de acesso: 1325 1112 3456 ...
-const formatarChaveAcesso = (chave: string): string => {
+export const formatarChaveAcesso = (chave: string): string => {
   if (!chave || chave.length !== 44) return chave;
   return chave.match(/.{1,4}/g)?.join(" ") || chave;
 };
 
 // Formatar CNPJ/CPF
-const formatarCpfCnpj = (valor: string): string => {
+export const formatarCpfCnpj = (valor: string): string => {
   const numeros = (valor || "").replace(/\D/g, "");
   if (numeros.length === 11) {
     return numeros.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
@@ -93,9 +58,24 @@ const formatarCpfCnpj = (valor: string): string => {
   return valor;
 };
 
+// Escapa caracteres especiais para não gerar XML inválido (ex.: "Café & Cia")
+export const escapeXml = (valor: unknown): string =>
+  String(valor ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+
+// Destinatário pessoa física usa <CPF> (11 dígitos); pessoa jurídica usa <CNPJ>
+export const tagDocumento = (documento?: string | null): string => {
+  const numeros = (documento || "").replace(/\D/g, "");
+  return numeros.length === 11 ? `<CPF>${numeros}</CPF>` : `<CNPJ>${numeros}</CNPJ>`;
+};
+
 // Gerar XML da NF-e
 export const gerarXMLNFe = (nota: NotaFiscal, empresa: Empresa): string => {
-  const dadosFiscais = nota.dados_fiscais || {};
+  const dadosFiscais = (nota.dados_fiscais ?? {}) as DadosFiscaisNFe;
   const destinatario = dadosFiscais.destinatario || {};
   const itens = dadosFiscais.itens || [];
   const totais = dadosFiscais.totais || {};
@@ -108,7 +88,7 @@ export const gerarXMLNFe = (nota: NotaFiscal, empresa: Empresa): string => {
       <ide>
         <cUF>13</cUF>
         <cNF>${String(nota.numero).padStart(8, "0")}</cNF>
-        <natOp>${nota.natureza_operacao}</natOp>
+        <natOp>${escapeXml(nota.natureza_operacao)}</natOp>
         <mod>55</mod>
         <serie>${nota.serie}</serie>
         <nNF>${nota.numero}</nNF>
@@ -127,15 +107,15 @@ export const gerarXMLNFe = (nota: NotaFiscal, empresa: Empresa): string => {
       </ide>
       <emit>
         <CNPJ>${(empresa.cnpj || "").replace(/\D/g, "")}</CNPJ>
-        <xNome>${empresa.razao_social}</xNome>
-        <xFant>${empresa.nome_fantasia}</xFant>
+        <xNome>${escapeXml(empresa.razao_social)}</xNome>
+        <xFant>${escapeXml(empresa.nome_fantasia)}</xFant>
         <enderEmit>
-          <xLgr>${empresa.logradouro || ""}</xLgr>
-          <nro>${empresa.numero || "S/N"}</nro>
-          <xBairro>${empresa.bairro || ""}</xBairro>
+          <xLgr>${escapeXml(empresa.logradouro || "")}</xLgr>
+          <nro>${escapeXml(empresa.numero || "S/N")}</nro>
+          <xBairro>${escapeXml(empresa.bairro || "")}</xBairro>
           <cMun>1302603</cMun>
-          <xMun>${empresa.cidade || ""}</xMun>
-          <UF>${empresa.estado || ""}</UF>
+          <xMun>${escapeXml(empresa.cidade || "")}</xMun>
+          <UF>${escapeXml(empresa.estado || "")}</UF>
           <CEP>${(empresa.cep || "").replace(/\D/g, "")}</CEP>
           <cPais>1058</cPais>
           <xPais>Brasil</xPais>
@@ -145,36 +125,36 @@ export const gerarXMLNFe = (nota: NotaFiscal, empresa: Empresa): string => {
         <CRT>3</CRT>
       </emit>
       <dest>
-        <CNPJ>${(destinatario.cnpj_cpf || nota.clientes_fornecedores?.cpf_cnpj || "").replace(/\D/g, "")}</CNPJ>
-        <xNome>${destinatario.razao_social || nota.clientes_fornecedores?.nome_razao_social || ""}</xNome>
+        ${tagDocumento(destinatario.cnpj_cpf || nota.clientes_fornecedores?.cpf_cnpj)}
+        <xNome>${escapeXml(destinatario.razao_social || nota.clientes_fornecedores?.nome_razao_social || "")}</xNome>
         <enderDest>
-          <xLgr>${destinatario.endereco || ""}</xLgr>
-          <nro>${destinatario.numero || "S/N"}</nro>
-          <xBairro>${destinatario.bairro || ""}</xBairro>
+          <xLgr>${escapeXml(destinatario.endereco || "")}</xLgr>
+          <nro>${escapeXml(destinatario.numero || "S/N")}</nro>
+          <xBairro>${escapeXml(destinatario.bairro || "")}</xBairro>
           <cMun>1302603</cMun>
-          <xMun>${destinatario.cidade || ""}</xMun>
-          <UF>${destinatario.uf || ""}</UF>
+          <xMun>${escapeXml(destinatario.cidade || "")}</xMun>
+          <UF>${escapeXml(destinatario.uf || "")}</UF>
           <CEP>${(destinatario.cep || "").replace(/\D/g, "")}</CEP>
           <cPais>1058</cPais>
           <xPais>Brasil</xPais>
         </enderDest>
         <indIEDest>9</indIEDest>
-        <email>${destinatario.email || nota.clientes_fornecedores?.email || ""}</email>
+        <email>${escapeXml(destinatario.email || nota.clientes_fornecedores?.email || "")}</email>
       </dest>
-      ${itens.map((item: any, index: number) => `
+      ${itens.map((item: ItemNFe, index: number) => `
       <det nItem="${index + 1}">
         <prod>
-          <cProd>${item.codigo || index + 1}</cProd>
+          <cProd>${escapeXml(item.codigo || index + 1)}</cProd>
           <cEAN>SEM GTIN</cEAN>
-          <xProd>${item.descricao || ""}</xProd>
-          <NCM>${item.ncm || "00000000"}</NCM>
-          <CFOP>${item.cfop || "5102"}</CFOP>
-          <uCom>${item.unidade || "UN"}</uCom>
+          <xProd>${escapeXml(item.descricao || "")}</xProd>
+          <NCM>${escapeXml(item.ncm || "00000000")}</NCM>
+          <CFOP>${escapeXml(item.cfop || "5102")}</CFOP>
+          <uCom>${escapeXml(item.unidade || "UN")}</uCom>
           <qCom>${item.quantidade || 1}</qCom>
           <vUnCom>${Number(item.valor_unitario || 0).toFixed(4)}</vUnCom>
           <vProd>${Number(item.valor_total || 0).toFixed(2)}</vProd>
           <cEANTrib>SEM GTIN</cEANTrib>
-          <uTrib>${item.unidade || "UN"}</uTrib>
+          <uTrib>${escapeXml(item.unidade || "UN")}</uTrib>
           <qTrib>${item.quantidade || 1}</qTrib>
           <vUnTrib>${Number(item.valor_unitario || 0).toFixed(4)}</vUnTrib>
           <indTot>1</indTot>
@@ -283,7 +263,7 @@ export const downloadXMLNFe = (nota: NotaFiscal, empresa: Empresa): void => {
 // Gerar DANFE PDF - Layout oficial Receita Federal
 export const gerarPDFNFe = (nota: NotaFiscal, empresa: Empresa): void => {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
-  const dadosFiscais = nota.dados_fiscais || {};
+  const dadosFiscais = (nota.dados_fiscais ?? {}) as DadosFiscaisNFe;
   const destinatario = dadosFiscais.destinatario || {};
   const itens = dadosFiscais.itens || [];
   const totais = dadosFiscais.totais || {};
@@ -748,7 +728,7 @@ export const gerarPDFNFe = (nota: NotaFiscal, empresa: Empresa): void => {
   y += prodHeaderHeight;
 
   // Tabela de produtos
-  const produtosData = itens.map((item: any) => [
+  const produtosData = itens.map((item: ItemNFe) => [
     item.codigo || "-",
     (item.descricao || "").substring(0, 25),
     item.ncm || "00000000",

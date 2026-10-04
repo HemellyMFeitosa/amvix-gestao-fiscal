@@ -122,7 +122,7 @@ export const useArquivosXML = () => {
     // Filtro de período
     if (periodoFiltro !== "todos") {
       const hoje = new Date();
-      let dataLimite = new Date();
+      const dataLimite = new Date();
 
       switch (periodoFiltro) {
         case "ultimo-mes":

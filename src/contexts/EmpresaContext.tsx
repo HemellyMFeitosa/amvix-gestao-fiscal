@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { getErrorMessage } from "@/lib/errorMapper";
 
 // Interface segura - NÃO inclui certificado_senha para evitar exposição
 export interface Empresa {
@@ -84,11 +85,11 @@ export const EmpresaProvider: React.FC<{ children: ReactNode }> = ({ children })
           localStorage.setItem('empresaAtual', primeiraAtiva.id);
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro ao carregar empresas:', error);
       toast({
         title: 'Erro ao carregar empresas',
-        description: error.message,
+        description: getErrorMessage(error),
         variant: 'destructive',
       });
     } finally {

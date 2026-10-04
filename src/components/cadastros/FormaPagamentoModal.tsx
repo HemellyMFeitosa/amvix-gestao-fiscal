@@ -22,7 +22,7 @@ import { Loader2 } from "lucide-react";
 interface FormaPagamentoModalProps {
   open: boolean;
   onClose: () => void;
-  onSave: (forma: FormaPagamentoInput) => Promise<any>;
+  onSave: (forma: FormaPagamentoInput) => Promise<unknown>;
   forma?: FormaPagamento | null;
 }
 

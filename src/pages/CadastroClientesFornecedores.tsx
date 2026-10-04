@@ -25,6 +25,7 @@ import {
 import { Plus, Search, Pencil, Trash2, Users, Loader2 } from "lucide-react";
 import { useClientesFornecedores, ClienteFornecedor } from "@/hooks/useClientesFornecedores";
 import { ClienteFornecedorModal } from "@/components/cadastros/ClienteFornecedorModal";
+import type { ClienteFornecedorInput } from "@/hooks/useClientesFornecedores";
 
 const CadastroClientesFornecedores = () => {
   const { registros, loading, criarRegistro, atualizarRegistro, excluirRegistro } = useClientesFornecedores();
@@ -70,7 +71,7 @@ const CadastroClientesFornecedores = () => {
     setRegistroParaExcluir(null);
   };
 
-  const handleSave = async (registro: any) => {
+  const handleSave = async (registro: ClienteFornecedorInput) => {
     if (registroSelecionado) {
       await atualizarRegistro(registroSelecionado.id, registro);
     } else {
@@ -111,7 +112,7 @@ const CadastroClientesFornecedores = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <Tabs value={filtroTipo} onValueChange={(v) => setFiltroTipo(v as any)}>
+          <Tabs value={filtroTipo} onValueChange={(v) => setFiltroTipo(v as typeof filtroTipo)}>
             <TabsList>
               <TabsTrigger value="todos">Todos</TabsTrigger>
               <TabsTrigger value="cliente">Clientes</TabsTrigger>

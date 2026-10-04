@@ -22,7 +22,7 @@ import { Loader2 } from "lucide-react";
 interface ProdutoModalProps {
   open: boolean;
   onClose: () => void;
-  onSave: (produto: ProdutoInput) => Promise<any>;
+  onSave: (produto: ProdutoInput) => Promise<unknown>;
   produto?: Produto | null;
 }
 

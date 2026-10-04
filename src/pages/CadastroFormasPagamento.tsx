@@ -24,6 +24,7 @@ import {
 import { Plus, Search, Pencil, Trash2, CreditCard, Loader2 } from "lucide-react";
 import { useFormasPagamento, FormaPagamento } from "@/hooks/useFormasPagamento";
 import { FormaPagamentoModal } from "@/components/cadastros/FormaPagamentoModal";
+import type { FormaPagamentoInput } from "@/hooks/useFormasPagamento";
 
 const CadastroFormasPagamento = () => {
   const { formas, loading, criarForma, atualizarForma, excluirForma } = useFormasPagamento();
@@ -62,7 +63,7 @@ const CadastroFormasPagamento = () => {
     setFormaParaExcluir(null);
   };
 
-  const handleSave = async (forma: any) => {
+  const handleSave = async (forma: FormaPagamentoInput) => {
     if (formaSelecionada) {
       await atualizarForma(formaSelecionada.id, forma);
     } else {

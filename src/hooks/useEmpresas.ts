@@ -33,7 +33,7 @@ export const useEmpresas = () => {
       });
 
       return empresaData;
-    } catch (error: any) {
+    } catch (error: unknown) {
       logError('useEmpresas.criarEmpresa', error);
       toast({
         title: 'Erro ao criar empresa',
@@ -70,7 +70,7 @@ export const useEmpresas = () => {
       });
 
       return empresaData;
-    } catch (error: any) {
+    } catch (error: unknown) {
       logError('useEmpresas.atualizarEmpresa', error);
       toast({
         title: 'Erro ao atualizar empresa',
@@ -100,7 +100,7 @@ export const useEmpresas = () => {
       });
 
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       logError('useEmpresas.excluirEmpresa', error);
       toast({
         title: 'Erro ao excluir empresa',

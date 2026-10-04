@@ -9,12 +9,13 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 import { downloadXMLNFe, gerarPDFNFe } from "@/lib/nfeUtils";
 import { EnviarEmailNFeDialog } from "@/components/EnviarEmailNFeDialog";
+import type { DadosFiscaisNFe, EmpresaNFe, ItemNFe, NotaFiscal } from "@/types/nfe";
 
 interface VisualizarNFeDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  nota: any;
-  empresa?: any;
+  nota: NotaFiscal | null;
+  empresa?: EmpresaNFe | null;
 }
 
 export const VisualizarNFeDialog = ({ open, onOpenChange, nota, empresa }: VisualizarNFeDialogProps) => {
@@ -22,7 +23,7 @@ export const VisualizarNFeDialog = ({ open, onOpenChange, nota, empresa }: Visua
 
   if (!nota) return null;
 
-  const dadosFiscais = nota.dados_fiscais || {};
+  const dadosFiscais = (nota.dados_fiscais ?? {}) as DadosFiscaisNFe;
   const destinatario = dadosFiscais.destinatario || {};
   const itens = dadosFiscais.itens || [];
   const transporte = dadosFiscais.transporte || {};
@@ -188,7 +189,7 @@ export const VisualizarNFeDialog = ({ open, onOpenChange, nota, empresa }: Visua
                   </tr>
                 </thead>
                 <tbody>
-                  {itens.map((item: any, index: number) => (
+                  {itens.map((item: ItemNFe, index: number) => (
                     <tr key={index} className="border-b border-border">
                       <td className="py-2 px-2">{index + 1}</td>
                       <td className="py-2 px-2 font-mono">{item.codigo}</td>

@@ -7,8 +7,8 @@ export interface LogLGPD {
   acao: "leitura" | "criacao" | "alteracao" | "exclusao";
   entidade: string;
   registroId?: number | string;
-  dadosAntigos?: any;
-  dadosNovos?: any;
+  dadosAntigos?: unknown;
+  dadosNovos?: unknown;
   ip?: string;
   navegador: string;
 }
@@ -20,7 +20,7 @@ export interface SolicitacaoLGPD {
   dataSolicitacao: string;
   dataConclusao?: string;
   descricao: string;
-  dados?: any;
+  dados?: unknown;
 }
 
 const LOGS_KEY = "lgpd_logs";
@@ -59,7 +59,7 @@ export const useLGPDLogs = () => {
   const criarSolicitacao = (
     tipo: SolicitacaoLGPD["tipo"],
     descricao: string,
-    dados?: any
+    dados?: unknown
   ): number => {
     const novaSolicitacao: SolicitacaoLGPD = {
       id: Date.now(),
@@ -76,7 +76,7 @@ export const useLGPDLogs = () => {
   const atualizarSolicitacao = (
     id: number,
     status: SolicitacaoLGPD["status"],
-    dados?: any
+    dados?: unknown
   ) => {
     setSolicitacoes(prev =>
       prev.map(s =>

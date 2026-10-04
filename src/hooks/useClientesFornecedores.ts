@@ -51,7 +51,7 @@ export const useClientesFornecedores = () => {
 
       if (error) throw error;
       setRegistros((data || []) as ClienteFornecedor[]);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao carregar registros:", error);
       toast({
         title: "Erro",
@@ -88,7 +88,7 @@ export const useClientesFornecedores = () => {
         description: "Cadastro realizado com sucesso!",
       });
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao criar registro:", error);
       toast({
         title: "Erro",
@@ -116,7 +116,7 @@ export const useClientesFornecedores = () => {
         description: "Cadastro atualizado com sucesso!",
       });
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao atualizar registro:", error);
       toast({
         title: "Erro",
@@ -139,7 +139,7 @@ export const useClientesFornecedores = () => {
         description: "Cadastro excluído com sucesso!",
       });
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao excluir registro:", error);
       toast({
         title: "Erro",

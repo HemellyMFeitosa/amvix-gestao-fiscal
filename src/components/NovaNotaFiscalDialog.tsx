@@ -1,3 +1,4 @@
+import type React from "react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ClienteSelectNFe } from "@/components/ClienteSelectNFe";
+
+type ClienteSelecionado = Parameters<React.ComponentProps<typeof ClienteSelectNFe>["onSelect"]>[0];
+import { getErrorMessage } from "@/lib/errorMapper";
+import type { Json } from "@/integrations/supabase/types";
 
 interface ItemNota {
   id: string;
@@ -139,7 +144,7 @@ export const NovaNotaFiscalDialog = ({ open, onOpenChange, empresaId }: NovaNota
 
         if (error) throw error;
         return (data || []) as ProdutoNFe[];
-      } catch (error: any) {
+      } catch (error: unknown) {
         toast.error("Erro ao carregar produtos");
         throw error;
       }
@@ -399,7 +404,7 @@ export const NovaNotaFiscalDialog = ({ open, onOpenChange, empresaId }: NovaNota
           },
           informacoes_complementares: infComplementar,
           totais,
-        } as any,
+        } as unknown as Json,
       }]);
 
       if (error) throw error;
@@ -409,8 +414,8 @@ export const NovaNotaFiscalDialog = ({ open, onOpenChange, empresaId }: NovaNota
       queryClient.invalidateQueries({ queryKey: ["notas-fiscais-list"] });
       onOpenChange(false);
       resetForm();
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao salvar rascunho");
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, "Erro ao salvar rascunho"));
     } finally {
       setLoading(false);
     }
@@ -481,7 +486,7 @@ export const NovaNotaFiscalDialog = ({ open, onOpenChange, empresaId }: NovaNota
           },
           informacoes_complementares: infComplementar,
           totais,
-        } as any,
+        } as unknown as Json,
       }]);
 
       if (error) throw error;
@@ -491,8 +496,8 @@ export const NovaNotaFiscalDialog = ({ open, onOpenChange, empresaId }: NovaNota
       queryClient.invalidateQueries({ queryKey: ["notas-fiscais-list"] });
       onOpenChange(false);
       resetForm();
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao transmitir nota fiscal");
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, "Erro ao transmitir nota fiscal"));
     } finally {
       setLoading(false);
     }
@@ -548,7 +553,7 @@ export const NovaNotaFiscalDialog = ({ open, onOpenChange, empresaId }: NovaNota
 
   const totais = calcularTotais();
 
-  const handleClienteSelect = (cliente: any) => {
+  const handleClienteSelect = (cliente: ClienteSelecionado) => {
     setClienteId(cliente.id);
     setTipoDestinatario(cliente.tipo_pessoa === "fisica" ? "pf" : "pj");
     setCnpjCpf(cliente.cpf_cnpj);

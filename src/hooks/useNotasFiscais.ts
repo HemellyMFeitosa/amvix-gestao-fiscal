@@ -63,7 +63,8 @@ export const useNotasFiscaisList = (empresaId: string | undefined) => {
         .select(`
           *,
           clientes_fornecedores (
-            nome_razao_social
+            nome_razao_social,
+            email
           )
         `)
         .eq("empresa_id", empresaId)

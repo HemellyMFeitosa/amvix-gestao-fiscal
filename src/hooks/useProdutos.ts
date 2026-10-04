@@ -45,7 +45,7 @@ export const useProdutos = () => {
 
       if (error) throw error;
       setProdutos(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao carregar produtos:", error);
       toast({
         title: "Erro",
@@ -82,7 +82,7 @@ export const useProdutos = () => {
         description: "Produto cadastrado com sucesso!",
       });
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao criar produto:", error);
       toast({
         title: "Erro",
@@ -110,7 +110,7 @@ export const useProdutos = () => {
         description: "Produto atualizado com sucesso!",
       });
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao atualizar produto:", error);
       toast({
         title: "Erro",
@@ -133,7 +133,7 @@ export const useProdutos = () => {
         description: "Produto excluído com sucesso!",
       });
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao excluir produto:", error);
       toast({
         title: "Erro",

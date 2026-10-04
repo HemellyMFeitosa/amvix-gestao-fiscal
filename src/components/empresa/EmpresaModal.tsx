@@ -17,6 +17,7 @@ import { formatCNPJ, validateCNPJ } from "@/lib/cnpj";
 import { buscarCEP } from "@/lib/viacep";
 import { Search, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { getErrorMessage } from "@/lib/errorMapper";
 
 interface EmpresaModalProps {
   open: boolean;
@@ -119,10 +120,10 @@ const EmpresaModal = ({ open, onClose, empresa }: EmpresaModalProps) => {
           description: "Endereço preenchido automaticamente",
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Erro ao buscar CEP",
-        description: error.message,
+        description: getErrorMessage(error),
         variant: "destructive",
       });
     } finally {

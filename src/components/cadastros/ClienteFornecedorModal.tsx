@@ -25,7 +25,7 @@ import { buscarCEP } from "@/lib/viacep";
 interface ClienteFornecedorModalProps {
   open: boolean;
   onClose: () => void;
-  onSave: (registro: ClienteFornecedorInput) => Promise<any>;
+  onSave: (registro: ClienteFornecedorInput) => Promise<unknown>;
   registro?: ClienteFornecedor | null;
 }
 

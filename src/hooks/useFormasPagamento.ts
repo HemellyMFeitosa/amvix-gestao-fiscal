@@ -61,7 +61,7 @@ export const useFormasPagamento = () => {
 
       if (error) throw error;
       setFormas((data || []) as FormaPagamento[]);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao carregar formas de pagamento:", error);
       toast({
         title: "Erro",
@@ -98,7 +98,7 @@ export const useFormasPagamento = () => {
         description: "Forma de pagamento cadastrada com sucesso!",
       });
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao criar forma de pagamento:", error);
       toast({
         title: "Erro",
@@ -126,7 +126,7 @@ export const useFormasPagamento = () => {
         description: "Forma de pagamento atualizada com sucesso!",
       });
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao atualizar forma de pagamento:", error);
       toast({
         title: "Erro",
@@ -149,7 +149,7 @@ export const useFormasPagamento = () => {
         description: "Forma de pagamento excluída com sucesso!",
       });
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao excluir forma de pagamento:", error);
       toast({
         title: "Erro",

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { getErrorMessage } from "@/lib/errorMapper";
 
 export interface CertificadoInfo {
   empresa_id: string;
@@ -29,7 +30,7 @@ export const useCertificados = () => {
         console.error('Erro ao salvar senha do certificado:', error);
         toast({
           title: 'Erro ao salvar senha',
-          description: error.message,
+          description: getErrorMessage(error),
           variant: 'destructive',
         });
         return false;
@@ -41,11 +42,11 @@ export const useCertificados = () => {
       });
       
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro ao salvar senha do certificado:', error);
       toast({
         title: 'Erro ao salvar senha',
-        description: error.message,
+        description: getErrorMessage(error),
         variant: 'destructive',
       });
       return false;
@@ -70,14 +71,14 @@ export const useCertificados = () => {
         console.error('Erro ao obter senha do certificado:', error);
         toast({
           title: 'Erro ao obter senha',
-          description: error.message,
+          description: getErrorMessage(error),
           variant: 'destructive',
         });
         return null;
       }
 
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro ao obter senha do certificado:', error);
       return null;
     } finally {
@@ -109,7 +110,7 @@ export const useCertificados = () => {
         console.error('Erro ao atualizar certificado:', error);
         toast({
           title: 'Erro ao atualizar certificado',
-          description: error.message,
+          description: getErrorMessage(error),
           variant: 'destructive',
         });
         return false;
@@ -121,11 +122,11 @@ export const useCertificados = () => {
       });
       
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro ao atualizar certificado:', error);
       toast({
         title: 'Erro ao atualizar certificado',
-        description: error.message,
+        description: getErrorMessage(error),
         variant: 'destructive',
       });
       return false;
@@ -181,11 +182,11 @@ export const useCertificados = () => {
       });
 
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro ao cadastrar certificado:', error);
       toast({
         title: 'Erro ao cadastrar certificado',
-        description: error.message,
+        description: getErrorMessage(error),
         variant: 'destructive',
       });
       return false;
@@ -226,11 +227,11 @@ export const useCertificados = () => {
       });
       
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro ao remover certificado:', error);
       toast({
         title: 'Erro ao remover certificado',
-        description: error.message,
+        description: getErrorMessage(error),
         variant: 'destructive',
       });
       return false;

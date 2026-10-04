@@ -54,26 +54,50 @@ const ERROR_PATTERNS: Array<{ pattern: RegExp; message: string }> = [
   { pattern: /dados_fiscais não pode ser nulo/i, message: 'Dados fiscais são obrigatórios' },
 ];
 
+/** Formato comum dos erros retornados por Supabase, PostgREST e Auth */
+interface ErrorLike {
+  code?: string;
+  status?: number;
+  message?: string;
+  error_code?: string;
+  error_description?: string;
+  msg?: string;
+  details?: { code?: string } | string;
+  __isAuthError?: boolean;
+}
+
+const asErrorLike = (error: unknown): ErrorLike =>
+  typeof error === "object" && error !== null ? (error as ErrorLike) : {};
+
 /**
  * Extrai o código de erro de um objeto de erro
  */
-const getErrorCode = (error: any): string | null => {
+const getErrorCode = (error: unknown): string | null => {
   if (!error) return null;
-  
-  // Códigos PostgreSQL
-  if (error.code) return error.code;
-  
+  const e = asErrorLike(error);
+
+  // Códigos PostgreSQL / Auth
+  if (e.code) return e.code;
+
   // Códigos PostgREST
-  if (error.details?.code) return error.details.code;
-  
+  if (typeof e.details === "object" && e.details?.code) return e.details.code;
+
   // Códigos Auth
-  if (error.error_code) return error.error_code;
-  if (error.__isAuthError && error.code) return error.code;
-  
+  if (e.error_code) return e.error_code;
+
   // Status HTTP
-  if (error.status) return `HTTP_${error.status}`;
-  
+  if (e.status) return `HTTP_${e.status}`;
+
   return null;
+};
+
+/**
+ * Retorna a mensagem de um erro desconhecido (Error, objeto do Supabase ou string)
+ */
+export const getErrorMessage = (error: unknown, fallback = ""): string => {
+  if (typeof error === "string") return error || fallback;
+  const e = asErrorLike(error);
+  return e.message || e.error_description || e.msg || fallback;
 };
 
 /**
@@ -96,7 +120,7 @@ const matchErrorPattern = (message: string): string | null => {
  * @param error - Objeto de erro (pode ser de Supabase, PostgreSQL, Auth, etc.)
  * @returns Mensagem de erro segura para exibição
  */
-export const getSafeErrorMessage = (error: any): string => {
+export const getSafeErrorMessage = (error: unknown): string => {
   if (!error) return 'Erro desconhecido. Tente novamente.';
   
   // 1. Tentar código de erro específico
@@ -108,7 +132,7 @@ export const getSafeErrorMessage = (error: any): string => {
   }
   
   // 2. Tentar pattern matching na mensagem
-  const message = error.message || error.error_description || error.msg || '';
+  const message = getErrorMessage(error);
   const patternMatch = matchErrorPattern(message);
   if (patternMatch) return patternMatch;
   
@@ -121,7 +145,7 @@ export const getSafeErrorMessage = (error: any): string => {
  * @param context - Contexto do erro (nome do componente/hook)
  * @param error - Objeto de erro
  */
-export const logError = (context: string, error: any): void => {
+export const logError = (context: string, error: unknown): void => {
   if (import.meta.env.DEV) {
     console.error(`[${context}]`, error);
   }
@@ -130,9 +154,9 @@ export const logError = (context: string, error: any): void => {
 /**
  * Verifica se um erro é de autenticação/autorização
  */
-export const isAuthError = (error: any): boolean => {
+export const isAuthError = (error: unknown): boolean => {
   const code = getErrorCode(error);
-  const message = error?.message || '';
+  const message = getErrorMessage(error);
   
   return (
     code === '42501' ||
@@ -145,7 +169,7 @@ export const isAuthError = (error: any): boolean => {
 /**
  * Verifica se um erro é de validação
  */
-export const isValidationError = (error: any): boolean => {
+export const isValidationError = (error: unknown): boolean => {
   const code = getErrorCode(error);
   
   return (

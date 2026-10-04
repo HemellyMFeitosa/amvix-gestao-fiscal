@@ -17,6 +17,8 @@ import { useClientesFornecedores, useProdutosServicos, useEmpresaAtual } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { getErrorMessage } from "@/lib/errorMapper";
+import type { Json } from "@/integrations/supabase/types";
 
 interface ItemServico {
   id: string;
@@ -279,7 +281,7 @@ export const NovaNotaServicoDialog = ({ open, onOpenChange, empresaId }: NovaNot
           },
           informacoes_complementares: infComplementar,
           totais,
-        } as any,
+        } as unknown as Json,
       }]);
 
       if (error) throw error;
@@ -289,8 +291,8 @@ export const NovaNotaServicoDialog = ({ open, onOpenChange, empresaId }: NovaNot
       queryClient.invalidateQueries({ queryKey: ["notas-servico-list"] });
       onOpenChange(false);
       resetForm();
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao transmitir nota fiscal");
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, "Erro ao transmitir nota fiscal"));
     } finally {
       setLoading(false);
     }

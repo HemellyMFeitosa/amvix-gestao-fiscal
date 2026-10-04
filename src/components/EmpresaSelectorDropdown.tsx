@@ -20,8 +20,6 @@ export const EmpresaSelectorDropdown = () => {
   const [open, setOpen] = useState(false);
   const [busca, setBusca] = useState("");
 
-  if (!usuario) return null;
-
   const handleSelectEmpresa = async (empresaId: string) => {
     const empresa = empresasDisponiveis.find(e => e.id === empresaId);
     if (!empresa) return;
@@ -46,6 +44,9 @@ export const EmpresaSelectorDropdown = () => {
   }, [busca, empresasDisponiveis]);
 
   const temMuitasEmpresas = empresasDisponiveis.length > 8;
+
+  // Hooks precisam rodar sempre na mesma ordem: o retorno antecipado fica depois deles
+  if (!usuario) return null;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

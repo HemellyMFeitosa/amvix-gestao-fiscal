@@ -9,7 +9,7 @@ import { useSPEDFiscal, ArquivoSPED } from "@/hooks/useSPEDFiscal";
 const SPEDFiscal = () => {
   const { historico, loading, estatisticas, gerarSPED, downloadSPED, validarSPED } = useSPEDFiscal();
   const [modalOpen, setModalOpen] = useState(false);
-  const [resultadoValidacao, setResultadoValidacao] = useState<any>(null);
+  const [resultadoValidacao, setResultadoValidacao] = useState<ReturnType<ReturnType<typeof useSPEDFiscal>["validarSPED"]> | null>(null);
 
   const handleValidar = (arquivo: ArquivoSPED) => {
     const resultado = validarSPED(arquivo);
