@@ -1,7 +1,5 @@
 # AMVIX — Gestão Fiscal e Empresarial
 
-[![CI](https://github.com/HemellyMFeitosa/amvix-gestao-fiscal/actions/workflows/ci.yml/badge.svg)](https://github.com/HemellyMFeitosa/amvix-gestao-fiscal/actions/workflows/ci.yml)
-
 Plataforma web para centralizar a rotina fiscal de empresas e escritórios contábeis: emissão e controle de notas fiscais (NF-e, NFS-e, NFC-e), obrigações acessórias (SPED Fiscal, EFD-Reinf), certificados digitais, multiempresa/filiais e controle de acesso por perfil.
 
 > 🔗 **Demo:** [amvix-nova-gestao-07154.vercel.app](https://amvix-nova-gestao-07154.vercel.app)
