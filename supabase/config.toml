@@ -1,0 +1,5 @@
+project_id = "seu-project-id"
+
+# Todas as Edge Functions exigem JWT válido (padrão do Supabase).
+[functions.admin-create-user]
+verify_jwt = true
